@@ -429,6 +429,12 @@ task("test-dom", [], testDom);
 desc("Run unit and DOM tests");
 task("test", ["test-unit", "test-dom"]);
 
+desc("Check code formatting and lint issues");
+task("check", [], async () => {
+  await shell("deno", ["fmt", "--check"]);
+  await shell("deno", ["lint"]);
+});
+
 desc("Builds a zip file for submission to the Chrome and Firefox stores. The output is in dist/");
 task("package", ["write-command-listing"], async () => {
   await buildStorePackage();
