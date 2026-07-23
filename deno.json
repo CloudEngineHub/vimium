@@ -1,6 +1,6 @@
 {
   "fmt": {
-    "exclude": ["icons/*.svg"],
+    "exclude": ["icons/*.svg", "**/*.html"],
     "lineWidth": 100
   },
   "imports": {
