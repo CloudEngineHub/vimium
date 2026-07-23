@@ -10,11 +10,11 @@ import * as path from "@std/path";
 
 const scriptDir = path.dirname(path.fromFileUrl(import.meta.url));
 
-chrome.storage.session.get = async (key) => {
+chrome.storage.session.get = testHelper.withPromise((key) => {
   if (key == "commandToOptionsToKeys") {
     return { commandToOptionsToKeys: {} };
   }
-};
+});
 
 await testHelper.jsdomStub(path.join(scriptDir, "../pages/command_listing.html"));
 await Settings.onLoaded();

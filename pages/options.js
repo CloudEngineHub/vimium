@@ -1,6 +1,5 @@
 import "./all_content_scripts.js";
 import { ExclusionRulesEditor } from "./exclusion_rules_editor.js";
-import { allCommands } from "../background_scripts/all_commands.js";
 import { Commands, KeyMappingsParser } from "../background_scripts/commands.js";
 import * as userSearchEngines from "../background_scripts/user_search_engines.js";
 
@@ -128,10 +127,11 @@ function setFormFromSettings(settings) {
       case "string":
         el.value = value;
         break;
-      case "option":
+      case "option": {
         const optionEl = document.querySelector(`input[name="${optionName}"][value="${value}"]`);
         optionEl.checked = true;
         break;
+      }
       default:
         throw new Error(`Unrecognized option type ${optionType}`);
     }
@@ -159,10 +159,11 @@ function getSettingsFromForm() {
       case "string":
         value = el.value.trim();
         break;
-      case "option":
+      case "option": {
         const optionEl = document.querySelector(`input[name="${optionName}"]:checked`);
         value = optionEl.value;
         break;
+      }
       default:
         throw new Error(`Unrecognized option type ${optionType}`);
     }
@@ -254,7 +255,7 @@ function showValidationErrors() {
 function removeDuplicateChars(str) {
   const seen = new Set();
   let result = "";
-  for (let char of str) {
+  for (const char of str) {
     if (!seen.has(char)) {
       result += char;
       seen.add(char);

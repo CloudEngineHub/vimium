@@ -1,5 +1,5 @@
 // This file contains stubs for a number of browser and chrome APIs which are missing in Deno.
-import JSON5 from "npm:json5";
+import JSON5 from "json5";
 
 // Wraps `fn` so it always returns a Promise, matching the contract of the real (async) chrome.* API
 // being stubbed, without needing to declare `fn` itself `async` (which will trigger a deno lint
