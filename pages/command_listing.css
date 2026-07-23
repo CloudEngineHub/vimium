@@ -2,7 +2,8 @@
   --border-color: #666;
 }
 
-html, body {
+html,
+body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   margin: 0;
@@ -78,7 +79,8 @@ h3 code {
   margin-right: auto;
 }
 
-p.desc, p.details {
+p.desc,
+p.details {
   margin-left: 1rem;
 }
 

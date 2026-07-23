@@ -71,7 +71,8 @@ tr.vimium-reset {
   z-index: 2147483647;
 }
 
-thead.vimium-reset, tbody.vimium-reset {
+thead.vimium-reset,
+tbody.vimium-reset {
   display: table-header-group;
 }
 

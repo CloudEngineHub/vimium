@@ -22,7 +22,8 @@ h1 {
   flex-grow: 1;
 }
 
-#not-enabled-error, #firefox-missing-permissions-error {
+#not-enabled-error,
+#firefox-missing-permissions-error {
   padding: var(--padding);
 }
 

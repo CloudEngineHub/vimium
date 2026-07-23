@@ -33,7 +33,8 @@
   line-height: 20px;
 }
 
-span#hud-find-input, span#hud-match-count {
+span#hud-find-input,
+span#hud-match-count {
   display: inline;
   outline: none;
   white-space: nowrap;

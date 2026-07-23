@@ -61,7 +61,8 @@ ul {
   border-bottom: none;
 }
 
-#vomnibar li .top-half, #vomnibar li .bottom-half {
+#vomnibar li .top-half,
+#vomnibar li .bottom-half {
   display: block;
   overflow: hidden;
 }
@@ -100,13 +101,15 @@ ul {
   font-weight: bold;
 }
 
-#vomnibar li em, #vomnibar li .title {
+#vomnibar li em,
+#vomnibar li .title {
   margin-left: 4px;
 }
 #vomnibar li em {
   font-style: italic;
 }
-#vomnibar li em .match, #vomnibar li .title .match {
+#vomnibar li em .match,
+#vomnibar li .title .match {
   color: #333;
 }
 
