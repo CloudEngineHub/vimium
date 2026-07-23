@@ -41,8 +41,7 @@ class EnginePrefixWrapper {
   }
 }
 
-let debug = false;
-const inTransit = {};
+const debug = false;
 const completionCache = new SimpleCache(2 * 60 * 60 * 1000, 5000); // Two hours, 5000 entries.
 const engineCache = new SimpleCache(1000 * 60 * 60 * 1000); // 1000 hours.
 

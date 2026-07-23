@@ -22,7 +22,7 @@ export async function registerPortWithOwnerPage(event) {
 }
 
 // Used by unit tests.
-export async function unregister() {
+export function unregister() {
   ownerPagePort = null;
   handleMessage = null;
 }

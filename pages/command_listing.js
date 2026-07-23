@@ -16,7 +16,7 @@ function compareKeys(a, b) {
 
 function replaceBackticksWithCodeTags(str) {
   let count = 0;
-  return str.replace(/`/g, (match) => {
+  return str.replace(/`/g, (_match) => {
     count++;
     return count % 2 === 1 ? "<code>" : "</code>";
   });

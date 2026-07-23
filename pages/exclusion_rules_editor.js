@@ -20,7 +20,6 @@ const ExclusionRulesEditor = {
       el.remove();
     }
 
-    const rowTemplate = document.querySelector("#exclusion-rule-template").content;
     for (const rule of exclusionRules) {
       this.addRow(rule.pattern, rule.passKeys);
     }

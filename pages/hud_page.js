@@ -125,7 +125,7 @@ export const handlers = {
     // want.
     try {
       inputEl.contentEditable = "plaintext-only";
-    } catch (error) { // Fallback to standard-compliant version.
+    } catch (_error) { // Fallback to standard-compliant version.
       inputEl.contentEditable = "true";
     }
     inputEl.id = "hud-find-input";
