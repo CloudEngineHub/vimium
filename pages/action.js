@@ -27,7 +27,7 @@ const ActionPage = {
       const hasAllHostsPermission = await browser.permissions.contains(permission);
       if (!hasAllHostsPermission) {
         hideUI();
-        document.querySelector("#grant-hosts-permission").addEventListener("click", async (e) => {
+        document.querySelector("#grant-hosts-permission").addEventListener("click", () => {
           browser.permissions.request(permission);
           // We close the action page because if the user clicks on this button once, clicks "deny"
           // on the browser's permissions dialog, and then clicks on the button a second time, the
@@ -48,7 +48,7 @@ const ActionPage = {
     document.querySelector("#optionsLink").href = chrome.runtime.getURL("pages/options.html");
 
     const saveButton = document.querySelector("#save");
-    saveButton.addEventListener("click", (e) => this.onSave());
+    saveButton.addEventListener("click", () => this.onSave());
 
     document.querySelector("#cancel").addEventListener("click", () => globalThis.close());
 

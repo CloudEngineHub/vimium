@@ -5,7 +5,7 @@ import * as to from "../../background_scripts/tab_operations.js";
 context("TabOperations openurlInCurrentTab", () => {
   should("open a regular URL", async () => {
     let url = null;
-    stub(chrome.tabs, "update", (id, args) => {
+    stub(chrome.tabs, "update", (_id, args) => {
       url = args.url;
     });
     const expected = "http://example.com";

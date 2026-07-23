@@ -35,7 +35,7 @@ context("isUrl", () => {
   });
 });
 
-context("convertToUrl", async () => {
+context("convertToUrl", () => {
   should("detect and clean up valid URLs", async () => {
     assert.equal("http://www.google.com/", await UrlUtils.convertToUrl("http://www.google.com/"));
     assert.equal(

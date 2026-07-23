@@ -52,7 +52,8 @@ export function onKeyEvent(event) {
       exitEventIsEscape: KeyboardUtils.isEscape(event),
     });
   } else if (event.key === "ArrowUp") {
-    if (rawQuery = FindModeHistory.getQuery(findMode.historyIndex + 1)) {
+    rawQuery = FindModeHistory.getQuery(findMode.historyIndex + 1);
+    if (rawQuery) {
       findMode.historyIndex += 1;
       if (findMode.historyIndex === 0) {
         findMode.partialQuery = findMode.rawQuery;
