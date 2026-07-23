@@ -1,13 +1,22 @@
 // This file contains stubs for a number of browser and chrome APIs which are missing in Deno.
 import JSON5 from "npm:json5";
 
+// Wraps `fn` so it always returns a Promise, matching the contract of the real (async) chrome.* API
+// being stubbed, without needing to declare `fn` itself `async` (which will trigger a deno lint
+// warning if `fn` doesn't `await` anything).
+export function withPromise(fn) {
+  return function (...args) {
+    return Promise.resolve(fn.apply(this, args));
+  };
+}
+
 // There are 3 chrome.storage.* objects with identical APIs.
 // - areaName: one of "local", "sync", "session".
 const createStorageAPI = (areaName) => {
   const storage = {
     store: {},
 
-    async set(items) {
+    set: withPromise(function (items) {
       let key, value;
       chrome.runtime.lastError = undefined;
       for (key of Object.keys(items)) {
@@ -18,9 +27,9 @@ const createStorageAPI = (areaName) => {
         value = items[key];
         globalThis.chrome.storage.onChanged.call(key, value, areaName);
       }
-    },
+    }),
 
-    async get(keysArg) {
+    get: withPromise(function (keysArg) {
       chrome.runtime.lastError = undefined;
       if (keysArg == null) {
         return globalThis.structuredClone(this.store);
@@ -35,20 +44,20 @@ const createStorageAPI = (areaName) => {
         }
         return result;
       }
-    },
+    }),
 
-    async remove(key) {
+    remove: withPromise(function (key) {
       chrome.runtime.lastError = undefined;
       if (key in this.store) {
         delete this.store[key];
       }
       globalThis.chrome.storage.onChanged.callEmpty(key);
-    },
+    }),
 
-    async clear() {
+    clear: withPromise(function () {
       // TODO: Consider firing the change listener if Chrome's API implementation does.
       this.store = {};
-    },
+    }),
   };
 
   // The "session" storage has one API that the others don't.

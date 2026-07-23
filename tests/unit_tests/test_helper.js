@@ -3,6 +3,8 @@ import * as jsdom from "jsdom";
 import "./test_chrome_stubs.js";
 import "../../lib/utils.js";
 
+export { withPromise } from "./test_chrome_stubs.js";
+
 const shouldaSubset = {
   assert: shoulda.assert,
   context: shoulda.context,
