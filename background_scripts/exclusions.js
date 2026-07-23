@@ -26,9 +26,6 @@ const ExclusionRegexpCache = {
   },
 };
 
-// Make RegexpCache, which is required on the page popup, accessible via the Exclusions object.
-const RegexpCache = ExclusionRegexpCache;
-
 // Merge the matching rules for URL, or null. In the normal case, we use the configured @rules;
 // hence, this is the default. However, when called from the page popup, we are testing what
 // effect candidate new rules would have on the current tab. In this case, the candidate rules are
@@ -61,12 +58,6 @@ export function isEnabledForUrl(url) {
     isEnabledForUrl: !rule || (rule.passKeys.length > 0),
     passKeys: rule ? rule.passKeys : "",
   };
-}
-
-function setRules(rules) {
-  // Callers map a rule to null to have it deleted, and rules without a pattern are useless.
-  const newRules = rules.filter((rule) => rule?.pattern);
-  Settings.set("exclusionRules", newRules);
 }
 
 function onSettingsUpdated() {
