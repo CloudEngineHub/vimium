@@ -35,6 +35,11 @@ context("UIComponent", () => {
     c = new UIComponent("testing.html", "example-class");
     await c.load("example.html", "example-class");
     stubPostMessage(c.iframeElement, function () {});
+    // `window` here is the jsdom window stubbed onto globalThis by test_helper's jsdomStub, and
+    // must be used to construct the Event so it belongs to the same realm as c.iframeElement;
+    // globalThis.Event is a different (Deno-native) class and jsdom rejects it as "not of type
+    // Event" when dispatched.
+    // deno-lint-ignore no-window no-window-prefix
     c.iframeElement.dispatchEvent(new window.Event("load"));
     assert.equal(document.body, document.activeElement);
 
