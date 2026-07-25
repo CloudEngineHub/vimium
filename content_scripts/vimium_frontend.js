@@ -431,7 +431,7 @@ async function checkIfEnabledForUrl() {
   if (!Settings.isLoaded()) {
     promises.push(Settings.onLoaded());
   }
-  const [response, ...unused] = await Promise.all(promises);
+  const [response] = await Promise.all(promises);
 
   isEnabledForUrl = response.isEnabledForUrl;
 

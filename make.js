@@ -3,12 +3,12 @@
 // This is a set of tasks for building and testing Vimium in development.
 import * as fs from "@std/fs";
 import * as path from "@std/path";
-import { abort, desc, run, task } from "https://deno.land/x/drake@v1.5.1/mod.ts";
+import { abort, desc, run, task } from "drake";
 import puppeteer from "puppeteer";
 // We use a vendored version of shoulda, rather than jsr:@philc/shoulda, because shoulda.js is used
 // in dom_tests.js which is loaded by Puppeteer, which doesn't have access to Deno's module system.
 import * as shoulda from "./tests/vendor/shoulda.js";
-import JSON5 from "npm:json5";
+import JSON5 from "json5";
 import { DOMParser } from "@b-fuze/deno-dom";
 import * as fileServer from "@std/http/file-server";
 
@@ -22,8 +22,12 @@ async function shell(procName, argsArray = []) {
     optArray.unshift("/c", procName);
     procName = "cmd.exe";
   }
-  const p = Deno.run({ cmd: [procName].concat(argsArray) });
-  const status = await p.status();
+  const command = new Deno.Command(procName, {
+    args: argsArray,
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  const status = await command.output();
   if (!status.success) {
     throw new Error(`${procName} ${argsArray} exited with status ${status.code}`);
   }
@@ -112,7 +116,6 @@ async function checkForCommonBuildIssues() {
 
 // Verify all files referenced in the manifest are present in dist.
 async function checkFilesFromManifestArePresent(manifest) {
-  const t = getPathsFromManifest(manifest);
   const missing = [];
 
   for (const file of getPathsFromManifest(manifest)) {
@@ -260,7 +263,7 @@ async function runUnitTests() {
   // Import every test file.
   const dir = path.join(projectPath, "tests/unit_tests");
   const files = Array.from(Deno.readDirSync(dir)).map((f) => f.name).sort();
-  for (let f of files) {
+  for (const f of files) {
     if (f.endsWith("_test.js")) {
       await import(path.join(dir, f));
     }
@@ -284,7 +287,7 @@ function setupPuppeteerPageForTests(page) {
     }
     processing = false;
   };
-  page.on("console", async (msg) => {
+  page.on("console", (msg) => {
     const values = msg.args().map((a) => a.jsonValue());
     messageQueue.push(values);
     if (!processing) {
@@ -345,7 +348,7 @@ function isPortAvailable(number) {
     const listener = Deno.listen({ port: number });
     listener.close();
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 }

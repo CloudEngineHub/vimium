@@ -324,7 +324,7 @@ const Commands = {
     // to be droppped into a special Vimium mode.
     const passNextKeys = Object.entries(this.keyToRegistryEntry)
       .filter(([key, v]) => v.command == "passNextKey" && key.length > 1)
-      .map(([key, v]) => key);
+      .map(([key]) => key);
     await chrome.storage.session.set({ passNextKeyKeys: passNextKeys });
   },
 
