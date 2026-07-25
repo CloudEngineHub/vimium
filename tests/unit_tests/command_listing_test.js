@@ -1,4 +1,5 @@
 import * as testHelper from "./test_helper.js";
+import { withPromise } from "./test_helper.js";
 import "../../tests/unit_tests/test_chrome_stubs.js";
 import "../../lib/utils.js";
 import "../../lib/settings.js";
@@ -9,17 +10,21 @@ context("command listing", () => {
   setup(async () => {
     await testHelper.jsdomStub("pages/command_listing.html");
     await Settings.onLoaded();
-    stub(chrome.storage.session, "get", async (key) => {
-      if (key == "commandToOptionsToKeys") {
-        const data = {
-          "reload": {
-            "": ["a"],
-            "hard": ["b"],
-          },
-        };
-        return { commandToOptionsToKeys: data };
-      }
-    });
+    stub(
+      chrome.storage.session,
+      "get",
+      withPromise((key) => {
+        if (key == "commandToOptionsToKeys") {
+          const data = {
+            "reload": {
+              "": ["a"],
+              "hard": ["b"],
+            },
+          };
+          return { commandToOptionsToKeys: data };
+        }
+      }),
+    );
   });
 
   should("have a section in the html for every group", async () => {

@@ -62,9 +62,8 @@ function nthRegexIndex(str, regex, n) {
 
 const KeyMappingsParser = {
   // Parses the text supplied by the user in their "keyMappings" setting.
-  // - shouldLogWarnings: if true, logs to the console when part of the user's config is invalid.
   // Returns { keyToRegistryEntry, keyToMappedKey, validationErrors }.
-  parse(configText, shouldLogWarnings) {
+  parse(configText) {
     let keyToRegistryEntry = {};
     let mapKeyRegistry = {};
     let errors = [];
@@ -241,19 +240,19 @@ const KeyMappingsParser = {
       // Note that option names are allowed to be letters only; no numbers.
       let match, matchedString, key, value;
       // Case: option value surrounded by quotes (key= "a b"). Spaces are allowed in the value.
-      if (match = optionString.match(/^([a-zA-Z]+)="([^"]+)"(\s+|$)/)) {
+      if ((match = optionString.match(/^([a-zA-Z]+)="([^"]+)"(\s+|$)/))) {
         matchedString = match[0];
         key = match[1];
         value = match[2];
       } // Case: option value not surrounded by quotes (key=value). Spaces aren't allowed.
-      else if (match = optionString.match(/^([a-zA-Z]+)=(\S+)(\s+|$)/)) {
+      else if ((match = optionString.match(/^([a-zA-Z]+)=(\S+)(\s+|$)/))) {
         matchedString = match[0];
         key = match[1];
         value = match[2];
       } // Case: single option (flag), or "any URL". This correctly parses URLs because URLs cannot
       // contain unescaped equals or space characters. The key will be the option's name (or the
       // URL), and the value will be true.
-      else if (match = optionString.match(/^([^\s"]+)(\s+|$)/)) {
+      else if ((match = optionString.match(/^([^\s"]+)(\s+|$)/))) {
         matchedString = match[0];
         key = match[1];
         value = true;
@@ -301,7 +300,6 @@ const Commands = {
   // Parses the user's keyMapping config text and persists the parsed key mappings into the
   // extension's storage, for use by the other parts of this extension.
   async loadKeyMappings(userKeyMappingsConfigText) {
-    let key, command;
     this.keyToRegistryEntry = {};
     this.mapKeyRegistry = {};
 
@@ -311,7 +309,6 @@ const Commands = {
 
     const parsed = KeyMappingsParser.parse(
       defaultKeyConfig + "\n" + userKeyMappingsConfigText,
-      true,
     );
     this.mapKeyRegistry = parsed.keyToMappedKey;
     this.keyToRegistryEntry = parsed.keyToRegistryEntry;

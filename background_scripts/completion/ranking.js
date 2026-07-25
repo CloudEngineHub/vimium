@@ -103,7 +103,7 @@ export function wordRelevancy(queryTerms, url, title) {
 //
 // return Math.max(urlScore, titleScore)
 
-let oneMonthAgo = 1000 * 60 * 60 * 24 * 30;
+const oneMonthAgo = 1000 * 60 * 60 * 24 * 30;
 
 // Returns a score between [0, 1] which indicates how recent the given timestamp is. Items which
 // are over a month old are counted as 0. This range is quadratic, so an item from one day ago has

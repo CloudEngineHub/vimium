@@ -1,4 +1,5 @@
 import "./test_helper.js";
+import { withPromise } from "./test_helper.js";
 import "../../lib/settings.js";
 import "../../background_scripts/main.js";
 import { RegistryEntry } from "../../background_scripts/commands.js";
@@ -13,13 +14,17 @@ context("HintCoordinator", () => {
 
     stub(chrome.webNavigation, "getAllFrames", () => [{ frameId: 0 }, { frameId: 1 }]);
 
-    stub(chrome.tabs, "sendMessage", async (_tabId, message, options) => {
-      if (message.messageType == "getHintDescriptors") {
-        return frameIdToHintDescriptors[options.frameId];
-      } else if (message.messageType == "activateMode") {
-        receivedMessages.push(message);
-      }
-    });
+    stub(
+      chrome.tabs,
+      "sendMessage",
+      withPromise((_tabId, message, options) => {
+        if (message.messageType == "getHintDescriptors") {
+          return frameIdToHintDescriptors[options.frameId];
+        } else if (message.messageType == "activateMode") {
+          receivedMessages.push(message);
+        }
+      }),
+    );
 
     await HintCoordinator.prepareToActivateLinkHintsMode(0, 0, {
       modeIndex: 0,
@@ -181,13 +186,17 @@ context("Selecting frames", () => {
   should("nextFrame", async () => {
     const focusedFrames = [];
     stub(chrome.webNavigation, "getAllFrames", () => [{ frameId: 1 }, { frameId: 2 }]);
-    stub(chrome.tabs, "sendMessage", async (_tabId, message, options) => {
-      if (message.handler == "getFocusStatus") {
-        return { focused: options.frameId == 2, focusable: true };
-      } else if (message.handler == "focusFrame") {
-        focusedFrames.push(options.frameId);
-      }
-    });
+    stub(
+      chrome.tabs,
+      "sendMessage",
+      withPromise((_tabId, message, options) => {
+        if (message.handler == "getFocusStatus") {
+          return { focused: options.frameId == 2, focusable: true };
+        } else if (message.handler == "focusFrame") {
+          focusedFrames.push(options.frameId);
+        }
+      }),
+    );
 
     await BackgroundCommands.nextFrame(1, 0);
     assert.equal([1], focusedFrames);
