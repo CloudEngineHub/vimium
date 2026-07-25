@@ -19,7 +19,7 @@ async function shell(procName, argsArray = []) {
   if (Deno.build.os == "windows") {
     // if win32, prefix arguments with "/c {original command}"
     // e.g. "mkdir c:\git\vimium" becomes "cmd.exe /c mkdir c:\git\vimium"
-    optArray.unshift("/c", procName);
+    argsArray.unshift("/c", procName);
     procName = "cmd.exe";
   }
   const command = new Deno.Command(procName, {
