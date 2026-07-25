@@ -334,7 +334,7 @@ const BackgroundCommands = {
       chrome.tabs.remove(tab.id);
     });
   },
-  restoreTab: createRepeatCommand(async (request) => {
+  restoreTab: createRepeatCommand(async (_request) => {
     await chrome.sessions.restore(null);
   }),
   async togglePinTab({ count, tab }) {
@@ -346,7 +346,7 @@ const BackgroundCommands = {
   moveTabLeft: moveTab,
   moveTabRight: moveTab,
 
-  async setZoom({ tabId, registryEntry }) {
+  setZoom({ tabId, registryEntry }) {
     const level = registryEntry.options?.["level"] ?? "1";
     const newZoom = parseFloat(level);
     if (!isNaN(newZoom)) {
@@ -363,7 +363,7 @@ const BackgroundCommands = {
     const newZoom = nextZoomLevel(currentZoom, -count);
     chrome.tabs.setZoom(tabId, newZoom);
   },
-  async zoomReset({ tabId }) {
+  zoomReset({ tabId }) {
     chrome.tabs.setZoom(tabId, 0); // setZoom of 0 sets to the tab default.
   },
 
@@ -667,7 +667,7 @@ const sendRequestHandlers = {
     HintCoordinator.prepareToActivateLinkHintsMode(sender.tab.id, sender.frameId, request);
   },
 
-  async initializeFrame(request, sender) {
+  async initializeFrame(_request, sender) {
     // Check whether the extension is enabled for the top frame's URL, rather than the URL of the
     // specific frame that sent this request.
     const enabledState = exclusions.isEnabledForUrl(sender.tab.url);

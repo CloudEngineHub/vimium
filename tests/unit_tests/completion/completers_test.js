@@ -1,4 +1,5 @@
 import "../test_helper.js";
+import { withPromise } from "../test_helper.js";
 import "../../../background_scripts/tab_recency.js";
 import "../../../background_scripts/bg_utils.js";
 import "../../../background_scripts/completion/search_engines.js";
@@ -370,12 +371,15 @@ context("multi completer", () => {
 context("command completer", () => {
   const commandCompleter = new CommandCompleter();
   const multiCompleter = new MultiCompleter([commandCompleter]);
-  const setZoom = allCommands.filter((command) => command.name == "setZoom")[0];
 
   should("return all commands with default options if no mappings are specified", async () => {
-    stub(chrome.storage.session, "get", async () => ({
-      commandToOptionsToKeys: {},
-    }));
+    stub(
+      chrome.storage.session,
+      "get",
+      withPromise(() => ({
+        commandToOptionsToKeys: {},
+      })),
+    );
     stub(Commands, "keyToRegistryEntry", {});
 
     const suggestions = await filterCompleter(commandCompleter, []);
@@ -390,14 +394,18 @@ context("command completer", () => {
   });
 
   should("create suggestions for different variations of the same command", async () => {
-    stub(chrome.storage.session, "get", async () => ({
-      commandToOptionsToKeys: {
-        "setZoom": {
-          "value=1.1": ["z1"],
-          "value=1.2": ["z2"],
+    stub(
+      chrome.storage.session,
+      "get",
+      withPromise(() => ({
+        commandToOptionsToKeys: {
+          "setZoom": {
+            "value=1.1": ["z1"],
+            "value=1.2": ["z2"],
+          },
         },
-      },
-    }));
+      })),
+    );
 
     stub(Commands, "keyToRegistryEntry", {
       "z1": new RegistryEntry(),
