@@ -15,8 +15,6 @@ import {
   Suggestion,
   TabCompleter,
 } from "../../../background_scripts/completion/completers.js";
-import * as ranking from "../../../background_scripts/completion/ranking.js";
-import { RegexpCache } from "../../../background_scripts/completion/ranking.js";
 import "../../../lib/url_utils.js";
 import { Commands, RegistryEntry } from "../../../background_scripts/commands.js";
 import { allCommands } from "../../../background_scripts/all_commands.js";

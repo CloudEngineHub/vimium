@@ -224,7 +224,7 @@ class FindMode extends Mode {
           const range = selection.getRangeAt(0);
 
           if (range) {
-            let sourceRange = document.createRange();
+            const sourceRange = document.createRange();
             sourceRange.setStart(node, 0);
             return range.compareBoundaryPoints(Range.START_TO_START, sourceRange) <= 0;
           } else {
@@ -241,7 +241,7 @@ class FindMode extends Mode {
     if (!this.query.regexMatches?.length) {
       return "";
     }
-    let [row, col] = this.query.activeRegexIndices;
+    const [row, col] = this.query.activeRegexIndices;
     return this.query.regexMatches[row][col];
   }
 
@@ -253,7 +253,7 @@ class FindMode extends Mode {
     const stepSize = backwards ? -1 : 1;
 
     let [row, col] = this.query.activeRegexIndices;
-    let numRows = this.query.regexMatches.length;
+    const numRows = this.query.regexMatches.length;
     col += stepSize;
     while (col < 0 || col >= this.query.regexMatches[row].length) {
       if (col < 0) {

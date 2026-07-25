@@ -205,7 +205,7 @@ const HintCoordinator = {
       }
     });
     this.onExit = [onExit];
-    const protocol = window.location.protocol;
+    const protocol = globalThis.location.protocol;
     // chrome-extension, moz-extension (Firefox), extension (Edge).
     const isExtensionPage = protocol.endsWith("extension:");
     chrome.runtime.sendMessage({

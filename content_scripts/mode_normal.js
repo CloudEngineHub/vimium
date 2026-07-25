@@ -88,7 +88,7 @@ const enterNormalMode = function (count) {
 };
 
 function findSelectedHelper(backwards) {
-  const selection = window.getSelection().toString();
+  const selection = globalThis.getSelection().toString();
   if (!selection) return;
   FindMode.updateQuery(selection);
   FindMode.saveQuery();

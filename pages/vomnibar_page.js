@@ -466,7 +466,7 @@ class VomnibarUI {
     this.completionList = this.box.querySelector("ul");
     this.completionList.style.display = "";
 
-    window.addEventListener("focus", () => this.input.focus());
+    globalThis.addEventListener("focus", () => this.input.focus());
     // A click in the vomnibar itself refocuses the input.
     this.box.addEventListener("click", (event) => {
       this.input.focus();
@@ -487,11 +487,12 @@ function init() {
       case "hidden":
         ui?.onHidden();
         break;
-      case "activate":
+      case "activate": {
         const options = Object.assign({}, event.data);
         delete options.name;
         activate(options);
         break;
+      }
       default:
         Utils.assert(false, "Unrecognized message type.", event.data);
     }
