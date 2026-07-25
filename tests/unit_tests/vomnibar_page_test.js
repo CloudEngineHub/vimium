@@ -1,4 +1,5 @@
 import * as testHelper from "./test_helper.js";
+import { withPromise } from "./test_helper.js";
 import "../../tests/unit_tests/test_chrome_stubs.js";
 import {
   CommandCompleter,
@@ -7,8 +8,7 @@ import {
 } from "../../background_scripts/completion/completers.js";
 import * as vomnibarPage from "../../pages/vomnibar_page.js";
 import * as userSearchEngines from "../../background_scripts/user_search_engines.js";
-import { allCommands } from "../../background_scripts/all_commands.js";
-import { Commands, RegistryEntry } from "../../background_scripts/commands.js";
+import { Commands } from "../../background_scripts/commands.js";
 import { filterCompleter } from "./completion/completers_test.js";
 
 function newKeyEvent(properties) {
@@ -31,11 +31,15 @@ context("vomnibar page", () => {
   let ui;
   setup(async () => {
     await testHelper.jsdomStub("pages/vomnibar_page.html");
-    stub(chrome.runtime, "sendMessage", async (message) => {
-      if (message.handler == "filterCompletions") {
-        return [];
-      }
-    });
+    stub(
+      chrome.runtime,
+      "sendMessage",
+      withPromise((message) => {
+        if (message.handler == "filterCompletions") {
+          return [];
+        }
+      }),
+    );
     vomnibarPage.reset();
     await vomnibarPage.activate();
     ui = vomnibarPage.ui;
@@ -51,12 +55,16 @@ context("vomnibar page", () => {
   });
 
   should("edit a completion's URL when ctrl-enter is pressed", async () => {
-    stub(chrome.runtime, "sendMessage", async (message) => {
-      if (message.handler == "filterCompletions") {
-        const s = new Suggestion({ url: "http://hello.com" });
-        return [s];
-      }
-    });
+    stub(
+      chrome.runtime,
+      "sendMessage",
+      withPromise((message) => {
+        if (message.handler == "filterCompletions") {
+          const s = new Suggestion({ url: "http://hello.com" });
+          return [s];
+        }
+      }),
+    );
     await ui.update();
     await ui.onKeyEvent(newKeyEvent({ type: "keydown", key: "up" }));
     // TODO(philc): Why does this need to be lowercase enter?
@@ -68,10 +76,14 @@ context("vomnibar page", () => {
     ui.setQuery("www.example.com");
     let handler = null;
     let url = null;
-    stub(chrome.runtime, "sendMessage", async (message) => {
-      handler = message.handler;
-      url = message.url;
-    });
+    stub(
+      chrome.runtime,
+      "sendMessage",
+      withPromise((message) => {
+        handler = message.handler;
+        url = message.url;
+      }),
+    );
     await ui.onKeyEvent(newKeyEvent({ type: "keypress", key: "Enter" }));
     ui.onHidden();
     assert.equal("openUrlInCurrentTab", handler);
@@ -82,10 +94,14 @@ context("vomnibar page", () => {
     ui.setQuery("example");
     let handler = null;
     let query = null;
-    stub(chrome.runtime, "sendMessage", async (message) => {
-      handler = message.handler;
-      query = message.query;
-    });
+    stub(
+      chrome.runtime,
+      "sendMessage",
+      withPromise((message) => {
+        handler = message.handler;
+        query = message.query;
+      }),
+    );
     await ui.onKeyEvent(newKeyEvent({ type: "keypress", key: "Enter" }));
     ui.onHidden();
     assert.equal("launchSearchQuery", handler);
@@ -93,7 +109,7 @@ context("vomnibar page", () => {
   });
 
   // This test covers #4396.
-  should("not treat javascript keywords as user-defined search engines", async () => {
+  should("not treat javascript keywords as user-defined search engines", () => {
     ui.setQuery("constructor "); // "constructor" is a built-in JS property
     ui.onInput();
     // The query should not be treated as a user search engine.
@@ -104,12 +120,16 @@ context("vomnibar page", () => {
     userSearchEngines.set("e: https://www.example.com/search?q=%s Example");
 
     let capturedUrl = null;
-    stub(chrome.runtime, "sendMessage", async (message) => {
-      // Return a never-resolving promise for filterCompletions to simulate the race condition where
-      // the user hits Enter before the background page responds with completions.
-      if (message.handler === "filterCompletions") return new Promise(() => {});
-      if (message.handler === "openUrlInCurrentTab") capturedUrl = message.url;
-    });
+    stub(
+      chrome.runtime,
+      "sendMessage",
+      withPromise((message) => {
+        // Return a never-resolving promise for filterCompletions to simulate the race condition where
+        // the user hits Enter before the background page responds with completions.
+        if (message.handler === "filterCompletions") return new Promise(() => {});
+        if (message.handler === "openUrlInCurrentTab") capturedUrl = message.url;
+      }),
+    );
 
     ui.setQuery("e hello");
     ui.onInput();
@@ -126,7 +146,7 @@ context("vomnibar page", () => {
     await Commands.loadKeyMappings("");
     const multiCompleter = new MultiCompleter([new CommandCompleter()]);
     const suggestions = await filterCompleter(multiCompleter, ["go", "tab", "right"]);
-    stub(chrome.runtime, "sendMessage", async () => suggestions);
+    stub(chrome.runtime, "sendMessage", withPromise(() => suggestions));
     await ui.updateCompletions();
     assert.equal(1, ui.completionList.childNodes.length);
     const keys = Array.from(ui.completionList.querySelectorAll(".key")).map((x) => x.textContent);
